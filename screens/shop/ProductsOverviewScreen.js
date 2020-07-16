@@ -1,9 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ProductItem from "../../components/shop/ProductItem";
-import * as cartActions from "../../store/actions/Cart"
+import * as cartActions from "../../store/actions/Cart";
+import HeaderButton from "../../components/UI/HeaderButton";
 
 const ProductOverviewScreen = (props) => {
   const products = useSelector((state) => state.products.availableProducts);
@@ -21,7 +23,7 @@ const ProductOverviewScreen = (props) => {
           onViewDetail={() => {
             props.navigation.navigate("ProductDetail", {
               productId: itemData.item.id,
-              productTitle: itemData.item.title
+              productTitle: itemData.item.title,
             });
           }}
           onAddToCart={() => {
@@ -32,10 +34,32 @@ const ProductOverviewScreen = (props) => {
     />
   );
 };
-ProductOverviewScreen.navigationOptions = {
-  headerTitle: "List of Products",
+ProductOverviewScreen.navigationOptions = (navData) => {
+  return {
+    headerTitle: "List of Products",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Cart"
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navData.navigation.navigate('Cart');
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
-
-const styles = StyleSheet.create({});
 
 export default ProductOverviewScreen;

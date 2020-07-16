@@ -1,46 +1,65 @@
-import { ADD_TO_CART } from "../actions/Cart";
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/Cart";
+import { ADD_ORDER } from "../actions/order";
 import CartItem from "../../models/cart-item";
-import { ReactReduxContext } from "react-redux";
 
-const intialState = {
+const initialState = {
   items: {},
-  totalItems: 0,
+  totalAmount: 0,
 };
 
-export default (state = intialState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART:
       const addedProduct = action.product;
-      const productPrice = addedProduct.price;
-      const prodictTitle = addedProduct.title;
+      const prodPrice = addedProduct.price;
+      const prodTitle = addedProduct.title;
 
-      //if the item is already in cart increment totalItams, total price 
-      //otherwise simply add to the cart
+      let updatedOrNewCartItem;
+
+      //if the item is already in the cart, simply increment the quantity
+      //otherwise create nwq item
       if (state.items[addedProduct.id]) {
-        const updateCarItem = new CartItem(
+        updatedOrNewCartItem = new CartItem(
           state.items[addedProduct.id].quantity + 1,
-          productPrice,
-          prodictTitle,
-          state.items[addedProduct.id].sum + productPrice
+          prodPrice,
+          prodTitle,
+          state.items[addedProduct.id].sum + prodPrice
         );
-        return {
-          ...state,
-          items: { ...state.items, [addedProduct.id]: updateCarItem },
-          totalItems: state.totalItems + productPrice,
-        };
       } else {
-        const newCartItem = new CartItem(
-          1,
-          productPrice,
-          prodictTitle,
-          productPrice
-        );
-        return {
-          ...state,
-          items: { ...state.itemsm, [addedProduct.id]: newCartItem },
-          totalItems: state.totalItems + productPrice,
-        };
+        updatedOrNewCartItem = new CartItem(1, prodPrice, prodTitle, prodPrice);
       }
+      return {
+        ...state,
+        items: { ...state.items, [addedProduct.id]: updatedOrNewCartItem },
+        totalAmount: state.totalAmount + prodPrice,
+      };
+    case REMOVE_FROM_CART:
+      const selectedCartItem = state.items[action.pid];
+      const currentQty = selectedCartItem.quantity;
+      let updatedCartItems;
+
+      //if quantity is more than 1, then simply reduce the quantiy,
+      //otherwise remove the item from the cart
+      if (currentQty > 1) {
+        const updatedCartItem = new CartItem(
+          selectedCartItem.quantity - 1,
+          selectedCartItem.productPrice,
+          selectedCartItem.productTitle,
+          selectedCartItem.sum - selectedCartItem.productPrice
+        );
+        updatedCartItems = { ...state.items, [action.pid]: updatedCartItem };
+      } else {
+        updatedCartItems = { ...state.items };
+        delete updatedCartItems[action.pid];
+      }
+      return {
+        ...state,
+        items: updatedCartItems,
+        totalAmount: state.totalAmount - selectedCartItem.productPrice,
+      };
+    case ADD_ORDER:
+      return initialState;
   }
+
   return state;
 };

@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     color: "#888",
-    fontFamily: "open-sans-bold"
   },
   actions: {
     flexDirection: "row",
