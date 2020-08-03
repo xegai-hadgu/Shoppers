@@ -12,7 +12,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import OrderItem from '../../components/shop/OrderItem';
-import * as ordersActions from '../../store/actions/order';
+import * as ordersActions from '../../store/actions/orders';
 import Colors from '../../constants/Colors';
 
 const OrdersScreen = props => {
@@ -36,6 +36,14 @@ const OrdersScreen = props => {
     );
   }
 
+  if (orders.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No order found, maybe start ordering some products?</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={orders}
@@ -53,8 +61,8 @@ const OrdersScreen = props => {
 
 OrdersScreen.navigationOptions = navData => {
   return {
-    headerTitle: 'Your Order',
-    headerLeft: () => (
+    headerTitle: 'Your Orders',
+    headerLeft: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Menu"
@@ -77,4 +85,3 @@ const styles = StyleSheet.create({
 });
 
 export default OrdersScreen;
-

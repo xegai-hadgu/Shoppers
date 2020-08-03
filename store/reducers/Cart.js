@@ -1,7 +1,7 @@
-import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/Cart';
-import { ADD_ORDER } from '../actions/order';
+import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/cart';
+import { ADD_ORDER } from '../actions/orders';
 import CartItem from '../../models/cart-item';
-import { DELETE_PRODUCT } from '../actions/Products';
+import { DELETE_PRODUCT } from '../actions/products';
 
 const initialState = {
   items: {},
@@ -17,9 +17,8 @@ export default (state = initialState, action) => {
 
       let updatedOrNewCartItem;
 
-       //if the item is already in the cart, simply increment the quantity
-      //otherwise create nwq item
       if (state.items[addedProduct.id]) {
+        // already have the item in the cart
         updatedOrNewCartItem = new CartItem(
           state.items[addedProduct.id].quantity + 1,
           prodPrice,
@@ -38,9 +37,8 @@ export default (state = initialState, action) => {
       const selectedCartItem = state.items[action.pid];
       const currentQty = selectedCartItem.quantity;
       let updatedCartItems;
-      //if quantity is more than 1, then simply reduce the quantiy,
-      //otherwise remove the item from the cart
       if (currentQty > 1) {
+        // need to reduce it, not erase it
         const updatedCartItem = new CartItem(
           selectedCartItem.quantity - 1,
           selectedCartItem.productPrice,
@@ -75,4 +73,3 @@ export default (state = initialState, action) => {
 
   return state;
 };
-

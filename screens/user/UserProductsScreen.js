@@ -1,12 +1,12 @@
 import React from 'react';
-import { FlatList, Button, Platform, Alert } from 'react-native';
+import { View, Text, FlatList, Button, Platform, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import ProductItem from '../../components/shop/ProductItem';
 import Colors from '../../constants/Colors';
-import * as productsActions from '../../store/actions/Products';
+import * as productsActions from '../../store/actions/products';
 
 const UserProductsScreen = props => {
   const userProducts = useSelector(state => state.products.userProducts);
@@ -16,8 +16,8 @@ const UserProductsScreen = props => {
     props.navigation.navigate('EditProduct', { productId: id });
   };
 
-  const deleteHandler = (id) => {
-    Alert.alert('Are you sure?', "Deleted item can't be recovered", [
+  const deleteHandler = id => {
+    Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
       { text: 'No', style: 'default' },
       {
         text: 'Yes',
@@ -28,6 +28,14 @@ const UserProductsScreen = props => {
       }
     ]);
   };
+
+  if (userProducts.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No products found, maybe start creating some?</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -63,7 +71,7 @@ const UserProductsScreen = props => {
 UserProductsScreen.navigationOptions = navData => {
   return {
     headerTitle: 'Your Products',
-    headerLeft:() => (
+    headerLeft: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Menu"
@@ -74,7 +82,7 @@ UserProductsScreen.navigationOptions = navData => {
         />
       </HeaderButtons>
     ),
-    headerRight: () => (
+    headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Add"
@@ -89,4 +97,3 @@ UserProductsScreen.navigationOptions = navData => {
 };
 
 export default UserProductsScreen;
-

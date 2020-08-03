@@ -12,7 +12,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import HeaderButton from '../../components/UI/HeaderButton';
-import * as productsActions from '../../store/actions/Products';
+import * as productsActions from '../../store/actions/products';
 import Input from '../../components/UI/Input';
 import Colors from '../../constants/Colors';
 
@@ -69,14 +69,14 @@ const EditProductScreen = props => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert('Error occurred!', error, [{ text: 'Okay' }]);
+      Alert.alert('An error occurred!', error, [{ text: 'Okay' }]);
     }
   }, [error]);
 
   const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
-      Alert.alert('Wrong input!', 'Make usre you enter valid input.', [
-        { text: 'Ok' }
+      Alert.alert('Wrong input!', 'Please check the errors in the form.', [
+        { text: 'Okay' }
       ]);
       return;
     }
@@ -206,7 +206,7 @@ EditProductScreen.navigationOptions = navData => {
     headerTitle: navData.navigation.getParam('productId')
       ? 'Edit Product'
       : 'Add Product',
-    headerRight: () => (
+    headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Save"
